@@ -118,7 +118,7 @@ def bot():
                 reply = re.sub(r'replacement_text',splits,reply)
                 print("Eliza: ",reply)
                 break
-        if(flag == 0):
+        if flag == 0:
             reply=random.choice(filler)
             print("Eliza: ",reply) 
         
