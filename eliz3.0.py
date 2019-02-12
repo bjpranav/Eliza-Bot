@@ -17,7 +17,7 @@ pronouns={
 
 
 dic={
-     r'.*\bPerhaps\b (?P<keywords>.+)':["You aren't certain, are you?",
+     r'.* Perhaps (?P<keywords>.+)':["You aren't certain, are you?",
                               "How sure are you about it?",
                               "Why are you uncertain?"
                               "You aren't sure"
@@ -25,7 +25,7 @@ dic={
      r'I want (?P<keywords>.+)':["Why do you want replacement_text?",
                               "What would you do if you got replacement_text?"
                               ],
-     r'.*\bSorry\b (?P<keywords>.*)':["It's absolutely fine.",
+     r'Sorry(?P<keywords>.*)':["It's absolutely fine.",
                                 "You don't need to appologize at all.",
                                 "What would you do when you feel sorry?",
                                 "No need for an apology"
@@ -40,7 +40,7 @@ dic={
                                 "Why do you think i should recall replacement_text now",
                                 "What else do you remember?"
                                 ],
-    r'(?P<keywords>.+If.+)':['Do you think its likely that replacement_text',
+    r'(?P<keywords>.+ If .+)':['Do you think its likely that replacement_text',
                               "Do you wish that replacement_text",
                               "What do you think about replacement_text",
                               ],
@@ -54,16 +54,16 @@ dic={
                               "What do you think machines have to do with your problem",
                               "Don't you think computers can help people?"
                               ],
-    r'.*\bam I (?P<keywords>.+)':['Do you believe you are replacement_text',
+    r'.*am I (?P<keywords>.+)':['Do you believe you are replacement_text',
                               "Would you want to be replacement_text",
                               "You wish i would tell you you are replacement_text",
                               "What would it mean if you were replacement_text?"
                               ],
-    r'.*\bam\b (?P<keywords>.+)':["Why do you say 'am'",
+    r'.* am (?P<keywords>.+)':["Why do you say 'am'",
                               "I don't understand that",
                               "You wish I would tell you you are replacement_text?"
                               ],
-    r'.*Hello (?P<keywords>.+)':["Hey! How's life?",
+    r'.*Hello(?P<keywords>.+)':["Hey! How's life?",
                               "Hi! Nice to meet you. Please state your problem.",
                               "Hello! Let's discuss about your problems."
                               ]
@@ -108,19 +108,19 @@ def bot():
             match=re.match(decompose,userinput,re.IGNORECASE)
             if(match!=None):
                 flag=1
-                matchText=match.group('keywords')
-                reply=random.choice(dic[decompose]) 
-                splits=matchText.split()
+                matchText = match.group('keywords')
+                reply = random.choice(dic[decompose])
+                splits = matchText.split()
                 for i in range(0,len(splits)):
                     if splits[i].lower() in pronouns:
                         splits[i]=pronouns[splits[i].lower()]
-                splits=" ".join(splits)   
-                reply=re.sub(r'replacement_text',splits,reply)
-                print("Eliza: ",reply)  
-        if(flag==0):
+                splits = " ".join(splits)
+                reply = re.sub(r'replacement_text',splits,reply)
+                print("Eliza: ",reply)
+                break
+        if(flag == 0):
             reply=random.choice(filler)
             print("Eliza: ",reply) 
         
             
-                
-                     
+bot()
