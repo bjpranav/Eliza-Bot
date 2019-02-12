@@ -11,25 +11,35 @@ pronouns={
         "i'll":"you will",
         "i've":"you have",
         "myself": "yourself"
+        
         }
 
 
 
 dic={
+     r'.*\bPerhaps\b (?P<keywords>.+)':["You aren't certain, are you?",
+                              "How sure are you about it?",
+                              "Why are you uncertain?"
+                              "You aren't sure"
+                              ],
      r'I want (?P<keywords>.+)':["Why do you want replacement_text?",
-              "What would you do if you got replacement_text?"],
-     r'.*Sorry (?P<keywords>.*)':["It's absolutely fine.",
-                "You don't need to appologize at all.",
-               "What would you do when you feel sorry?",
-               "No need for an apology"],
+                              "What would you do if you got replacement_text?"
+                              ],
+     r'.*\bSorry\b (?P<keywords>.*)':["It's absolutely fine.",
+                                "You don't need to appologize at all.",
+                                "What would you do when you feel sorry?",
+                                "No need for an apology"
+                                ],
      r'.*I Remember (?P<keywords>.+)':["Do you often think of replacement_text",
-                "Does thinking of replacement_text bring anything else to mind",
-               "What else do you remember?",
-               "Why do you remember replacement_text just now",
-               'What in the present situation reminds you of replacement_text'],
+                                "Does thinking of replacement_text bring anything else to mind",
+                                "What else do you remember?",
+                                "Why do you remember replacement_text just now",
+                                'What in the present situation reminds you of replacement_text'
+                                ],
     r'.*Do you remember (?P<keywords>.+)':["Did you think i would forget replacement_text",
-                "Why do you think i should recall replacement_text now",
-               "What else do you remember?"],
+                                "Why do you think i should recall replacement_text now",
+                                "What else do you remember?"
+                                ],
     r'(?P<keywords>.+If.+)':['Do you think its likely that replacement_text',
                               "Do you wish that replacement_text",
                               "What do you think about replacement_text",
@@ -44,16 +54,25 @@ dic={
                               "What do you think machines have to do with your problem",
                               "Don't you think computers can help people?"
                               ],
-    r'.*am I (?P<keywords>.+)':['Do you believe you are replacement_text',
+    r'.*\bam I (?P<keywords>.+)':['Do you believe you are replacement_text',
                               "Would you want to be replacement_text",
                               "You wish i would tell you you are replacement_text",
                               "What would it mean if you were replacement_text?"
                               ],
-    r'.*am (?P<keywords>.+)':["Why do you say 'am'",
+    r'.*\bam\b (?P<keywords>.+)':["Why do you say 'am'",
                               "I don't understand that",
-                              "You wish I would tell you you are replacement_text"
+                              "You wish I would tell you you are replacement_text?"
+                              ],
+    r'.*Hello (?P<keywords>.+)':["Hey! How's life?",
+                              "Hi! Nice to meet you. Please state your problem.",
+                              "Hello! Let's discuss about your problems."
                               ]
     }
+memoryMatchRegEx={
+    r'.*my (?P<keywords>\w+)':["Lets discuss further about your replacement_text"]    
+        }
+
+
 
 def bot():
     x=1
@@ -62,6 +81,7 @@ def bot():
     username=input()
     inputTracker=''
     match=re.match(nameExp,username,re.IGNORECASE)
+    filler=["Tell me more about it","I see","Please go on","That's very interesting"]
     firstName=match.group('fname')
     print("Eliza: Hi "+firstName+", How can I help you today?")
     
@@ -76,23 +96,28 @@ def bot():
                     "What do you expect me to say by repeating yourself?"]
             print("Eliza:",random.choice(repeatResponse))
             continue
+        for regExpressions in memoryMatchRegEx:
+            memoryMatch=re.match(regExpressions,userinput,re.IGNORECASE)
+            if(memoryMatch!=None):
+                memoryText=memoryMatch.group('keywords')
+                memoryReply=random.choice(memoryMatchRegEx[regExpressions])
+                replacedMemoryText=re.sub(r'replacement_text',memoryText,memoryReply)
+                filler.append(replacedMemoryText)
         inputTracker=userinput
         for decompose in dic:
             match=re.match(decompose,userinput,re.IGNORECASE)
             if(match!=None):
                 flag=1
                 matchText=match.group('keywords')
-                reply=random.choice(dic[decompose])
+                reply=random.choice(dic[decompose]) 
                 splits=matchText.split()
                 for i in range(0,len(splits)):
                     if splits[i].lower() in pronouns:
                         splits[i]=pronouns[splits[i].lower()]
-                        
                 splits=" ".join(splits)   
                 reply=re.sub(r'replacement_text',splits,reply)
                 print("Eliza: ",reply)  
         if(flag==0):
-            filler=["Tell me more about it","I see","Please go on","That's very interesting"]
             reply=random.choice(filler)
             print("Eliza: ",reply) 
         
