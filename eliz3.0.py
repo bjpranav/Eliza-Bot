@@ -1,6 +1,6 @@
 import re
 import random
-import string
+
 
 pronouns = {
     "i": "you",
@@ -11,70 +11,81 @@ pronouns = {
     "was": "were",
     "i'll": "you will",
     "i've": "you have",
-    "myself": "yourself"
+    "myself": "yourself",
+    "yourself": "myself"
 
 }
 
 dic = {
     r'.* ?Perhaps (?P<keywords>.+)': ["You aren't certain, are you?",
-                                     "How sure are you about it?",
-                                     "Why are you uncertain?",
-                                     "You aren't sure"
-                                     ],
+                                      "How sure are you about it?",
+                                      "Why are you uncertain?",
+                                      "You aren't sure"],
 
     r'I want (?P<keywords>.+)': ["Why do you want replacement_text?",
-                                 "What would you do if you got replacement_text?"
-                                 ],
+                                 "What would you do if you got replacement_text?"],
 
     r'.* ?Sorry(?P<keywords>.*)': ["It's absolutely fine.",
-               "You don't need to apologize at all.",
-               "What would you do when you feel sorry?",
-               "No need for an apology"],
+                                   "You don't need to apologize at all.",
+                                   "What would you do when you feel sorry?",
+                                   "No need for an apology"],
 
     r'.* ?I Remember (?P<keywords>.+)': ["Do you often think of replacement_text",
-                                       "Does thinking of replacement_text bring anything else to mind",
-                                       "What else do you remember?",
-                                       "Why do you remember replacement_text just now",
-                                       'What in the present situation reminds you of replacement_text'
-                                       ],
+                                         "Does thinking of replacement_text bring anything else to mind",
+                                         "What else do you remember?",
+                                         "Why do you remember replacement_text just now",
+                                         "What in the present situation reminds you of replacement_text"],
+
     r'.* ?Do you remember (?P<keywords>.+)': ["Did you think i would forget replacement_text",
-                                            "Why do you think i should recall replacement_text now",
-                                            "What else do you remember?"
-                                            ],
+                                              "Why do you think i should recall replacement_text now",
+                                              "What else do you remember?"],
+
     r'(?P<keywords>.+ If .+)': ['Do you think its likely that replacement_text',
                                 "Do you wish that replacement_text",
-                                "What do you think about replacement_text",
-                                ],
-    r'.* ?dream (?P<keywords>.+)': ['Have you ever fantasied replacement_text while you were awake',
-                                  "Have you dreamt replacement_text before?",
-                                  "Don't you believe that dream has something to do with your problem",
-                                  "What does that dream sugest to you?"
-                                  ],
-    r'.* ?computer ?(?P<keywords>.+)?': ['Do computers worry you',
-                                     "Why do you mention computers",
-                                     "What do you think machines have to do with your problem",
-                                     "Don't you think computers can help people?"
-                                     ],
-    r'.* am I (?P<keywords>.+)': ['Do you believe you are replacement_text',
-                                 "Would you want to be replacement_text",
-                                 "You wish i would tell you are replacement_text",
-                                 "What would it mean if you were replacement_text?"
-                                 ],
+                                "What do you think about replacement_text",],
+
+    r'.* ?dream (?P<keywords>.+)': ["Have you ever fantasied replacement_text while you were awake",
+                                    "Have you dreamt replacement_text before?",
+                                    "Don't you believe that dream has something to do with your problem",
+                                    "What does that dream suggest to you?"],
+
+    r'.* ?computer ?(?P<keywords>.+)?': ["Do computers worry you",
+                                         "Why do you mention computers",
+                                         "What do you think machines have to do with your problem",
+                                         "Don't you think computers can help people?"],
+
+    r'.* am I (?P<keywords>.+)': ["Do you believe you are replacement_text",
+                                  "Would you want to be replacement_text",
+                                  "You wish i would tell you are replacement_text",
+                                  "What would it mean if you were replacement_text?"],
+
     r'.* ?am (?P<keywords>.+)': ["Why do you say 'am'",
-                                "I don't understand that",
-                                "You wish I would tell you are replacement_text?"
-                                ],
+                                 "I don't understand that",
+                                 "You wish I would tell you are replacement_text?"],
+
     r'.* ?Hello ?(?P<keywords>.*)?': ["Hey! How's life?",
-                                  "Hi! Nice to meet you. Please state your problem.",
-                                  "Hello! Let's discuss about your problems."
-                                  ],
-    r'.* ?are you (?P<keywords>.*)':["Why are you interested in whether I am replacement_text or not ?",
-                                       "Would you prefer if I weren't replacement_text ?",
-                                       "Perhaps I am replacement_text in your fantasies",
-                                       "Do you sometimes think I am replacement_text"]
+                                      "Hi! Nice to meet you. Please state your problem.",
+                                      "Hello! Let's discuss about your problems."],
+
+    r'.* ?are you (?P<keywords>.*)': ["Why are you interested in whether I am replacement_text or not ?",
+                                      "Would you prefer if I weren't replacement_text ?",
+                                      "Perhaps I am replacement_text in your fantasies",
+                                      "Do you sometimes think I am replacement_text"],
+
+    r'.* ?are they (?P<keywords>.*)': ["Did you think they might be replacement_text",
+                                       "Would you like if they were not replacement_text",
+                                       "What if they were not replacement_text",
+                                       "Possibly they are replacement_text"],
+
+    r' .* ?your (?P<keywords>.*)' : ["Why are you concerned over my replacement_text",
+                                     "What about your own replacement_text",
+                                     "Are you worried about someone else's replacement_text",
+                                     "Really, my replacement_text!"]
+
 }
 memoryMatchRegEx = {
-    r'.*my (?P<keywords>\w+)': ["Lets discuss further about your replacement_text", "Tell me more about your replacement_text"]
+    r'.*my (?P<keywords>\w+)': ["Lets discuss further about your replacement_text",
+                                "Tell me more about your replacement_text"]
 }
 
 memorydic=[]
