@@ -16,26 +16,28 @@ pronouns = {
 }
 
 dic = {
-    r'.* Perhaps (?P<keywords>.+)': ["You aren't certain, are you?",
+    r'.* ?Perhaps (?P<keywords>.+)': ["You aren't certain, are you?",
                                      "How sure are you about it?",
-                                     "Why are you uncertain?"
+                                     "Why are you uncertain?",
                                      "You aren't sure"
                                      ],
+
     r'I want (?P<keywords>.+)': ["Why do you want replacement_text?",
                                  "What would you do if you got replacement_text?"
                                  ],
-    r'Sorry(?P<keywords>.*)': ["It's absolutely fine.",
-                               "You don't need to appologize at all.",
-                               "What would you do when you feel sorry?",
-                               "No need for an apology"
-                               ],
-    r'.*I Remember (?P<keywords>.+)': ["Do you often think of replacement_text",
+
+    r'.* ?Sorry(?P<keywords>.*)': ["It's absolutely fine.",
+               "You don't need to apologize at all.",
+               "What would you do when you feel sorry?",
+               "No need for an apology"],
+
+    r'.* ?I Remember (?P<keywords>.+)': ["Do you often think of replacement_text",
                                        "Does thinking of replacement_text bring anything else to mind",
                                        "What else do you remember?",
                                        "Why do you remember replacement_text just now",
                                        'What in the present situation reminds you of replacement_text'
                                        ],
-    r'.*Do you remember (?P<keywords>.+)': ["Did you think i would forget replacement_text",
+    r'.* ?Do you remember (?P<keywords>.+)': ["Did you think i would forget replacement_text",
                                             "Why do you think i should recall replacement_text now",
                                             "What else do you remember?"
                                             ],
@@ -43,32 +45,36 @@ dic = {
                                 "Do you wish that replacement_text",
                                 "What do you think about replacement_text",
                                 ],
-    r'.*dream (?P<keywords>.+)': ['Have you ever fantasied replacement_text while you were awake',
+    r'.* ?dream (?P<keywords>.+)': ['Have you ever fantasied replacement_text while you were awake',
                                   "Have you dreamt replacement_text before?",
                                   "Don't you believe that dream has something to do with your problem",
                                   "What does that dream sugest to you?"
                                   ],
-    r'.*computer (?P<keywords>.+)': ['Do computers worry you',
+    r'.* ?computer ?(?P<keywords>.+)?': ['Do computers worry you',
                                      "Why do you mention computers",
                                      "What do you think machines have to do with your problem",
                                      "Don't you think computers can help people?"
                                      ],
-    r'.*am I (?P<keywords>.+)': ['Do you believe you are replacement_text',
+    r'.* am I (?P<keywords>.+)': ['Do you believe you are replacement_text',
                                  "Would you want to be replacement_text",
                                  "You wish i would tell you are replacement_text",
                                  "What would it mean if you were replacement_text?"
                                  ],
-    r'.* am (?P<keywords>.+)': ["Why do you say 'am'",
+    r'.* ?am (?P<keywords>.+)': ["Why do you say 'am'",
                                 "I don't understand that",
                                 "You wish I would tell you are replacement_text?"
                                 ],
-    r'.*Hello (?P<keywords>.*)': ["Hey! How's life?",
+    r'.* ?Hello ?(?P<keywords>.*)?': ["Hey! How's life?",
                                   "Hi! Nice to meet you. Please state your problem.",
                                   "Hello! Let's discuss about your problems."
-                                  ]
+                                  ],
+    r'.* ?are you (?P<keywords>.*)':["Why are you interested in whether I am replacement_text or not ?",
+                                       "Would you prefer if I weren't replacement_text ?",
+                                       "Perhaps I am replacement_text in your fantasies",
+                                       "Do you sometimes think I am replacement_text"]
 }
 memoryMatchRegEx = {
-    r'.*my (?P<keywords>\w+)': ["Lets discuss further about your replacement_text"]
+    r'.*my (?P<keywords>\w+)': ["Lets discuss further about your replacement_text", "Tell me more about your replacement_text"]
 }
 
 memorydic=[]
@@ -110,6 +116,7 @@ def matchdic(userinput):
             splits = " ".join(splits)
             reply = re.sub(r'replacement_text', splits, reply)
             print("Eliza: ", reply)
+
             return flag
 
     flag = 0
@@ -119,7 +126,7 @@ def bot(firstName):
     x = 1
     filler = ["Tell me more about it " + firstName, "I see", "Please go on " + firstName,
               "That's very interesting " + firstName + "!"]
-    print(filler)
+
     inputTracker = None
 
     while x != 0:
@@ -141,7 +148,7 @@ def bot(firstName):
 
         if text!=userinput:
             memorydic.append(text)
-            print(memorydic)
+
 
         inputTracker = userinput
 
@@ -151,7 +158,7 @@ def bot(firstName):
         if flag == 0 and len(memorydic)==0:
             reply = random.choice(filler)
             print("Eliza: ", reply)
-        else:
+        elif len(memorydic)>0:
             reply = random.choice(memorydic)
             print("Eliza: ", reply)
 
