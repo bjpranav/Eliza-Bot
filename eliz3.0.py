@@ -1,5 +1,6 @@
 import re
 import random
+import string
 
 pronouns={
         "i":"you",
@@ -45,7 +46,7 @@ dic={
                               "What do you think about replacement_text",
                               ],
     r'.*dream (?P<keywords>.+)':['Have you ever fantasied replacement_text while you were awake',
-                              "Have you dreamt replacement_text before",
+                              "Have you dreamt replacement_text before?",
                               "Don't you believe that dream has something to do with your problem",
                               "What does that dream sugest to you?"
                               ],
@@ -56,14 +57,14 @@ dic={
                               ],
     r'.*am I (?P<keywords>.+)':['Do you believe you are replacement_text',
                               "Would you want to be replacement_text",
-                              "You wish i would tell you you are replacement_text",
+                              "You wish i would tell you are replacement_text",
                               "What would it mean if you were replacement_text?"
                               ],
     r'.* am (?P<keywords>.+)':["Why do you say 'am'",
                               "I don't understand that",
-                              "You wish I would tell you you are replacement_text?"
+                              "You wish I would tell you are replacement_text?"
                               ],
-    r'.*Hello(?P<keywords>.+)':["Hey! How's life?",
+    r'.*Hello (?P<keywords>.*)':["Hey! How's life?",
                               "Hi! Nice to meet you. Please state your problem.",
                               "Hello! Let's discuss about your problems."
                               ]
@@ -72,22 +73,28 @@ memoryMatchRegEx={
     r'.*my (?P<keywords>\w+)':["Lets discuss further about your replacement_text"]    
         }
 
-
-
-def bot():
-    x=1
+def userNameValidation():
     nameExp=r'((i\s?am\s?)|(my\s?name\s?is)|(they\s?call\s?me)|(myself))?\s?(?P<fname>\w+)'
-    print("Eliza: Hi, I'm a psychotherapist. What is your name? ")
     username=input()
-    inputTracker=''
-    match=re.match(nameExp,username,re.IGNORECASE)
-    filler=["Tell me more about it","I see","Please go on","That's very interesting"]
-    firstName=match.group('fname')
-    print("Eliza: Hi "+firstName+", How can I help you today?")
-    
+    if(username):
+        match=re.match(nameExp,username,re.IGNORECASE)
+        firstName=match.group('fname')
+        print("Eliza: Hi "+firstName+", How can I help you today?")
+        bot(firstName)
+    else:
+        print("Eliza: We are not proceeding without your name. Please type your name.")
+        userNameValidation()
+
+def bot(firstName):
+    x=1
+    filler=["Tell me more about it "+firstName,"I see","Please go on "+firstName,"That's very interesting "+firstName+"!"]
+    inputTracker=None
     while x!=0:
         userinput=input(firstName.title()+":")
         flag=0
+        if(userinput==''):
+            print("Eliza: Please talk something")
+            continue
         if(userinput == "quit"):
             print("Eliza: I will not say goodbye to you! I`ll say see you soon!")
             break
@@ -123,4 +130,8 @@ def bot():
             print("Eliza: ",reply) 
         
             
-bot()
+
+if(__name__ == "__main__"):
+    print("Eliza: Hi, I'm a psychotherapist. What is your name?")
+    userNameValidation()
+    
