@@ -96,7 +96,35 @@ dic = {
     r' ?Were you (?P<keywords>.*)': ["Would you like to believe I was replacement_text ?",
                                      "What suggests that I was replacement_text ?",
                                      "Perhaps I was replacement_text",
-                                     "What if I had been"]
+                                     "What if I had been"],
+     r'.*You say (?P<keywords>.+)':["Can you elaborate on replacement_text ",
+                              "Do you say replacement_text for some special reason",
+                              "That's quite Interesting"
+                              ],
+    r'.*am (?P<keywords>.+)':["Why do you say 'am'",
+                              "I don't understand that",
+                              "You wish I would tell you you are replacement_text"
+                              ],
+     r'Yes(?P<keywords>.*)':["You seem quite Positive",
+                              "You are sure",
+                              "I see","I Understand"
+                              ],
+     r'No(?P<keywords>.*)':["ARE YOU SAYING 'NO' JUST TO BE NEGATIVE)",
+                              "YOU SEEM BIT NEGATIVE",
+                              "WHY NOT","WHY 'NO'"
+                              ],
+    r'Because (?P<keywords>.+)':["Is that the reason)",
+                              "Don't any other reasons come to mind",
+                              "Does that reason seem to explain anything else",
+                              "What other reasons might there be"
+                              ],
+    r'Why (?P<keywords>.+)':["I 0) (Do you believe I don't replacement_text ",
+                              "Perhaps I will replacement_text in good time",
+                              "Should you replacement_text yourself",
+                              "You want me to replacement_text"
+                              ],
+    r'I am (?P<keywords>.+)':["Why are you not replacement_text?",
+                               "What would you do if you got replacement_text?"
 
 
 
