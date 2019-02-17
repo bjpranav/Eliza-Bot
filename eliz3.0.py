@@ -17,10 +17,10 @@ pronouns = {
 }
 
 dic = {
-    r'.* ?(Perhaps|Maybe|I am not sure|I don\'t know) ?(?P<keywords>.*)': ["How uncertain are you about this?",
-                                      "How sure are you about it?",
-                                      "How often do you respond with uncertainity?",
-                                      "You aren't you sure?"],
+    r'.* ?(Perhaps|Maybe|I am not sure|I don\'t know).*': ["How uncertain are you about this?",
+                                                           "How sure are you about it?",
+                                                           "How often do you respond with uncertainity?",
+                                                           "Can't you be more positive"],
 
     r'I want (?P<keywords>.+)': ["Why do you want replacement_text?",
                                  "What would you do if you got replacement_text?"],
@@ -53,14 +53,6 @@ dic = {
                                          "Why do you mention computers",
                                          "What do you think machines have to do with your problem",
                                          "Don't you think computers can help people?"],
-
-    r'I am (sad|unhappy|depressed|sick)': ["I am sorry to hear that",
-                                             "Do you think coming here will help you come out of it?",
-                                             "I'm sure its not pleasant"],
-
-    r'I am (happy|elated|glad|better)': ["Can you explain why?",
-                                           "I am happy to hear that",
-                                           "That's Great!"],
    
     r'.* ?am I (?P<keywords>.+)': ["Do you believe you are replacement_text",
                                   "Would you want to be replacement_text",
@@ -95,20 +87,22 @@ dic = {
                                     "Really, my replacement_text!"],
 
     r'I was (?P<keywords>.*)': ["Were you really replacement_text ?",
-                                  "Why do you tell me you were replacement_text now?"],
+                                "Why do you tell me you were replacement_text now?"],
 
     r'Were you (?P<keywords>.*)': ["Would you like to believe I was replacement_text ?",
                                      "What suggests that I was replacement_text ?",
                                      "Perhaps I was replacement_text",
                                      "What if I had been"],
-     r'.* You say (?P<keywords>.+)':["Can you elaborate on replacement_text ",
+    r'.* You say (?P<keywords>.+)':["Can you elaborate on replacement_text ",
                               "Do you say replacement_text for some special reason",
                               "That's quite Interesting"
                               ],
+
     r'.* am (?P<keywords>.+)':["Why do you say 'am'?",
                               "I don't understand that",
                               "You wish I would tell you you are replacement_text"
                               ],
+
      r'Yes ?(?P<keywords>.*)':["You seem quite Positive",
                               "You are sure?",
                               "I see","I Understand"
@@ -117,25 +111,24 @@ dic = {
                               "you seem bit negative",
                               "why not?","why 'NO'?"
                               ],
+
     r'Because (?P<keywords>.+)':["Is that the reason?",
                               "Don't any other reasons come to mind?",
                               "Does that reason seem to explain anything else?",
                               "What other reasons might there be?"
                               ],
+
     r'Why don\'t you (?P<keywords>.+)':["Do you believe I don't replacement_text ",
                               "Perhaps I will replacement_text in good time",
                               "Should you replacement_text yourself",
                               "You want me to replacement_text"
                               ],
-    
-    r'.* ?my (mother|father) (?P<keywords>\w+)': ["What was your relationship with your replacement_text  like?",
-                                                  "How do you feel about your replacement_text ?",
-                                                  "Does your relationship with your replacement_text related to your feelings today?",
-                                                  "Do you have trouble showing affection with your family?"],
 
-    r'.* ?my (?P<keywords>\w+)': ["Lets discuss further about your replacement_text",
-                                  "Tell me more about your replacement_text"],
-             
+    r'.* ?my (?P<keywords>(mother|father|brother|sister|wife)) .*': ["What was your relationship with your replacement_text like?",
+                                                                    "How do you feel about your replacement_text ?",
+                                                                    "Does your relationship with your replacement_text related to your feelings today?",
+                                                                    "Do you have trouble showing affection with your family?"],
+
     r'.* (you remind me of|you are) (?P<keywords>\w+)': ["What makes you think I am replacement_text?",
                                   "Does it please you to believe I am replacement_text",
                                   "Do you sometimes wish you were replacement_text",
@@ -157,21 +150,30 @@ dic = {
     r'.* ?(Always ?(?P<keywords>.*))': ["Do you have anything in particular?",
                                   "Is there any exemptions?",
                                   "Do you like to use definitive language?"],
+
     r'.* ?(am|is|are|was) like ?(?P<keywords>.*)': ["How sure are you about the similarity?",
                                   "Do you like to compare things??",
                                   "How did you make the connection?"],
 }
 memoryMatchRegEx = {
-    r'.* ?my (mother|father) (?P<keywords>\w+)': ["What was your relationship with your replacement_text  like?",
-                                                  "How do you feel about your replacement_text ?",
-                                                  "Does your relationship with your replacement_text related to your feelings today?",
-                                                  "Do you have trouble showing affection with your family?"],
 
     r'.* ?my (?P<keywords>\w+)': ["Lets discuss further about your replacement_text",
                                   "Tell me more about your replacement_text"]
 }
 
-memorydic=[]
+
+negative = ["sad", "unhappy", "depressed", "sick"]
+positive = ["happy", "elated", "glad", "better"]
+
+
+
+memoryMatchRegEx = {
+    r'.* ?my (?P<keywords>\w+)': ["Tell me more about your replacement_text",
+                                  "Let's hear more about you replacement_text"]
+}
+
+
+
 
 def userNameValidation():
     nameExp = r'((i\s?am\s?)|(my\s?name\s?is)|(they\s?call\s?me)|(myself))?\s?(?P<fname>\w+)'
@@ -197,6 +199,17 @@ def memory(userinput):
     return userinput
 
 
+def eliza_reply(matchText,reference):
+    reply = random.choice(dic[reference])
+
+    splits = matchText.split()
+    for i in range(0, len(splits)):
+        if splits[i].lower() in pronouns:
+            splits[i] = pronouns[splits[i].lower()]
+    splits = " ".join(splits)
+    return re.sub(r'replacement_text', splits, reply)
+
+
 def matchdic(userinput):
     for decompose in dic:
         match = re.match(decompose, userinput, re.IGNORECASE)
@@ -205,14 +218,20 @@ def matchdic(userinput):
             try:
                 match.group("keywords")
                 matchText = match.group('keywords')
-                reply = random.choice(dic[decompose])
-                splits = matchText.split()
-                for i in range(0, len(splits)):
-                    if splits[i].lower() in pronouns:
-                        splits[i] = pronouns[splits[i].lower()]
-                splits = " ".join(splits)
-                reply = re.sub(r'replacement_text', splits, reply)
-                print("Eliza: ", reply)
+
+                if matchText in negative:
+                    reference="negative"
+                    reply = eliza_reply(matchText,reference)
+                    print("Eliza: ", reply)
+                elif matchText in positive:
+                    reference = "positive"
+                    reply = eliza_reply(matchText,reference)
+                    print("Eliza: ", reply)
+                else:
+                    reference = decompose
+                    reply = eliza_reply(matchText, reference)
+                    print("Eliza: ", reply)
+
             except IndexError:
                 reply = random.choice(dic[decompose])
                 print("Eliza: ", reply)
@@ -225,7 +244,7 @@ def bot(firstName):
     x = 1
     filler = ["Tell me more about it " + firstName, "I see", "Please go on " + firstName,
               "That's very interesting " + firstName + "!"]
-
+    memorydic=[]
     inputTracker = None
 
     while x != 0:
@@ -247,6 +266,7 @@ def bot(firstName):
 
         if(text!=userinput):
             memorydic.append(text)
+
 
         inputTracker = userinput
 
