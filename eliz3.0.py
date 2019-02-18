@@ -154,6 +154,16 @@ dic = {
     r'.* ?(am|is|are|was) like ?(?P<keywords>.*)': ["How sure are you about the similarity?",
                                   "Do you like to compare things??",
                                   "How did you make the connection?"],
+
+    'negative':["I am sorry to hear you are replacement_text",
+                "Do you think coming here will help you not to be replacement_text ?",
+                "I'm sure its not pleasant to be replacement_text"],
+
+    'positive':["How have I helped you to be replacement_text ?",
+                "Has your treatment made you replacement_text ?",
+                "What makes you replacement_text just now ?"]
+
+
 }
 memoryMatchRegEx = {
 
@@ -163,7 +173,7 @@ memoryMatchRegEx = {
 
 
 negative = ["sad", "unhappy", "depressed", "sick"]
-positive = ["happy", "elated", "glad", "better"]
+positive = ["happy", "elated", "glad", "better","good","great"]
 
 
 
