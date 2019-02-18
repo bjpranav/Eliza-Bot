@@ -39,9 +39,9 @@ dic = {
                                 "Do you wish that replacement_text",
                                 "What do you think about replacement_text",],
 
-    r'.* ?dream ?(?P<keywords>.+)?': ["Have you ever fantasied replacement_text while you were awake",
+    r'.* ?dream (?P<keywords>.+)': ["Have you ever fantasied replacement_text while you were awake",
                                    "Have you dreamt replacement_text before?",
-                                   "Don't you believe that dream has something to do with your problem",
+                                   "Don't you believe that dream has something to do with your problem?",
                                    "What does that dream suggest to you?"],
 
     r'.* computer ?(?P<keywords>.+)?': ["Do computers worry you",
