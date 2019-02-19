@@ -11,6 +11,8 @@ recognize user input. For example, it stores the reply of sentences where the ke
 my is used. I detects positive or negative emotions and replies accordingly.
 These features are inspired from the Eliza research paper by Joseph Weizanbaum.
 
+PLEASE TYPE 'quit' TO END THE PROGRAM
+
 Algorithm:
     Requests user name and validates.
     Starts conversation.
@@ -162,7 +164,7 @@ dic = {
                                  ],
     #Greetings are common in conversation and it would be appropriate to reply back with greetings.
 
-    r'.* ?(Hello|Hi|Hey) ?(?P<keywords>.*)?': ["Hey! How's life?",
+    r'.* ?(Hello) ?(?P<keywords>.*)?': ["Hey! How's life?",
                                       "Hi! Nice to meet you. Please state your problem.",
                                       "Hello! Let's discuss about your problems."],
    
@@ -206,7 +208,7 @@ dic = {
                                      "What suggests that I was replacement_text ?",
                                      "Perhaps I was replacement_text",
                                      "What if I had been"],
-    r'.* You say (?P<keywords>.+)':["Can you elaborate on replacement_text ",
+    r'.*You say (?P<keywords>.+)':["Can you elaborate on replacement_text ",
                               "Do you say replacement_text for some special reason",
                               "That's quite Interesting"
                               ],
@@ -223,7 +225,7 @@ dic = {
                               ],
     #Presence of the keyword 'Because' indicates there is some kind of 'reason' involved. So the
     #keyword 'reason' is used to manipulate responses.
-    r'Because (?P<keywords>.+)':["Is that the reason?",
+    r'.*Because (?P<keywords>.+)':["Is that the reason?",
                               "Don't any other reasons come to mind?",
                               "Can you think of any other reasons?",
                               "Does that reason convience you?"
@@ -245,7 +247,7 @@ dic = {
     
     #In this regular expression, keywords related to family are captured. So those key words
     #are used to frame questions about relationship which the user is talking about
-    r'.* ?(you remind me of|you are) (?P<keywords>\w+)': ["What makes you think I am replacement_text?",
+    r'.* ?(you remind me of|you are) (?P<keywords>.+)': ["What makes you think I am replacement_text?",
                                   "Does it please you to believe I am replacement_text",
                                   "Do you sometimes wish you were replacement_text",
                                   "Perhaps you would like to be replacement_text"],
@@ -257,18 +259,18 @@ dic = {
                                   "Do you really belive I replacement_text you?",
                                   "I don't think I replacement_text you"],
     #The below regular expression, captures any question word and gives general outputs.
-    r'.* ?(what|why|when|how ?(?P<keywords>.*))': ["That's an interesting question",
+    r'.* ?(what|why|when|how) .*': ["That's an interesting question",
                                   "How long is this question in your mind?",
                                   "why did you ask that?",
                                   "Why are you asking that question?"], 
     #The below regular expression, captures words which refers to people with generality. We can 
     #ask the user to be more specific.
-    r'.* ?(everyone|everybody|none|nobody) ?(?P<keywords>.*)': ["Can you be more specific?",
+    r'.* ?(everyone|everybody|none|nobody) .*': ["Can you be more specific?",
                                   "Do you have someone in mind?",
                                   "Are you talking about anyone in particular?"],
     #Similar to previous expression, any replies which have 'always' can be captured and general
     #replies which asks user to be specific can be given.
-    r'.* ?(Always ?(?P<keywords>.*))': ["Do you have anything in particular?",
+    r'.* ?Always .*': ["Do you have anything in particular?",
                                   "Is there any exemptions?",
                                   "Do you like to use definitive language?"],
 
@@ -276,7 +278,7 @@ dic = {
     #we can include auxilary verbs after which the keyword 'like' in the context of similarity usually
     #follows
     
-    r'.* ?(am|is|are|was) like ?(?P<keywords>.*)': ["How sure are you about the similarity?",
+    r'.* ?(am|is|are|was) like .*': ["How sure are you about the similarity?",
                                   "Do you like to compare things??",
                                   "How did you make the connection?"],
 
@@ -374,6 +376,7 @@ def matchdic(userinput):
                 match.group("keywords")
                 # Captures the key word
                 matchText = match.group('keywords')
+                matchText = matchText.replace("?","")
                 # If the captured word is in the negative list, enters the condition
                 if matchText in negative:
                     # Reference is set as negative
@@ -429,7 +432,7 @@ def bot(firstName):
     # An infinite while loop
     while x != 0:
         # userinput stores the users reply
-        userinput = input(firstName.title() + ":")
+        userinput = input(firstName.title() + ": ")
         # A flag is set to 0
         flag = 0
         # If user input is empty space enters the condition
