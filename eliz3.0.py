@@ -2,13 +2,13 @@
 Eliza by Team GAP
 Team Members: Pranav Krishna SJ,Alagappan A, Ganesh Nalluru
 
-Eliza mimics a psychatrist. It takes input from the user and replies by
+Eliza mimics a psychiatrist. It takes input from the user and replies by
 spotting words and transforming sentences. The program replies something even 
-if the given sentence is not recogonizable. It detects repeated inputs, empty 
-strings and replies acordingly. It has a memory feature which makes the 
+if the given sentence is not recognizable. It detects repeated inputs, empty
+strings and replies accordingly. It has a memory feature which makes the
 conversation divert to the previously discussed topic if it does not 
 recognize user input. For example, it stores the reply of sentences where the keyword
-my is used. I detects positive or negative emotions and replies acordingly. 
+my is used. I detects positive or negative emotions and replies accordingly.
 These features are inspired from the Eliza research paper by Joseph Weizanbaum.
 
 Algorithm:
@@ -281,6 +281,9 @@ dic = {
     r'.* ?(am|is|are|was) like ?(?P<keywords>.*)': ["How sure are you about the similarity?",
                                   "Do you like to compare things??",
                                   "How did you make the connection?"],
+
+    # Keywords Negative and positive hold customised replies for negative and positive words.for
+    # The user input is compared against negative anf positive lists given at the start of the program.
     'negative':["I am sorry to hear you are replacement_text",
                 "Do you think coming here will help you not to be replacement_text ?",
                 "I'm sure its not pleasant to be replacement_text"],
@@ -290,6 +293,7 @@ dic = {
                 "What makes you replacement_text just now ?"]
 }
 
+# List of pronouns used for substitution in the later part of the program
 pronouns = {"i": "you", "me": "you",
             "you": "me","your": "my",
             "my": "your","was": "were",
@@ -297,113 +301,186 @@ pronouns = {"i": "you", "me": "you",
             "myself":"yourself", "yourself": "myself"}
 
 
-
-
+# Name validation
 def userNameValidation():
+    # Regex expression to find name from a given user input
     nameExp = r'((i\s?am\s?)|(my\s?name\s?is)|(they\s?call\s?me)|(myself))?\s?(?P<fname>\w+)'
+    # Getting the user input
     username = input()
+    # Removes space before and after a name
     username=username.strip()
+    # Checks if the given name is not a special character and removes blank spaces
     if (username.replace(" ", "") and not (set('[~!@#$%^&*()_+{}":;\']+$').intersection(username))):
+        # Matching the regex expression against the userinput by ignoring the case
         match = re.match(nameExp, username, re.IGNORECASE)
+        # Capturing the first name
         firstName = match.group('fname')
         print("Eliza: Hi " + firstName + ", How can I help you today?")
+        # Passing firstname as a parameter to the bot function
         bot(firstName)
+
+    # If userinput violates the constraint a recursive call back to the same function (userNameValidation).
     else:
         print("Eliza: We are not proceeding without your name. Please type your name.")
         userNameValidation()
 
+# Memory function
 def memory(userinput):
+    # Loop that runs on regular expression from memoryMatchRegEx function
     for regExpressions in memoryMatchRegEx:
+        # Matching the regex expression against the userinput by ignoring the case
         memoryMatch = re.match(regExpressions, userinput, re.IGNORECASE)
+        # If match found, enters the condition
         if (memoryMatch != None):
+            # Captures the key word
             memoryText = memoryMatch.group('keywords')
+            # Picks a random reply relating to the regex expression
             memoryReply = random.choice(memoryMatchRegEx[regExpressions])
+            # Replacing the replacement_text with the captured key word
             replacedMemoryText = re.sub(r'replacement_text', memoryText, memoryReply)
+            # Returns the replaced memory text
             return replacedMemoryText
+    # If match not found returns the user input
     return userinput
 
-
+# Reply function
 def eliza_reply(matchText,reference):
+    # Picks a random reply from the regex dictionary, relating to the passed reference value
     reply = random.choice(dic[reference])
+    # Splits the matchText into separate words in a list( Tokenizing )
     splits = matchText.split()
+    # Running a for look on the splits list
     for i in range(0, len(splits)):
+        # In case any of the word matches a key in the pronoun dictionary enter the if condition
         if splits[i].lower() in pronouns:
+            # Replaces the word by the key value in the pronoun dictionary
             splits[i] = pronouns[splits[i].lower()]
+    # Joining the list into a complete string
     splits = " ".join(splits)
+    # Returning the replaced text where the replacement_text is substituted with the string "splits"
     return re.sub(r'replacement_text', splits, reply)
 
-
+# Regex dictionary mapping
 def matchdic(userinput):
+    # Running a loop through the regex dictionary
     for decompose in dic:
+        # Matching the regex expression against the userinput by ignoring the case
         match = re.match(decompose, userinput, re.IGNORECASE)
+        # If match found, enters the condition
         if (match != None):
+            # Flag is set to 1, if matched
             flag = 1
+            # Try block to check if a regex expression in the dictionary consists of a named group(?P<keywords>.+) or not
             try:
+                # Enters the try block if named group exist
                 match.group("keywords")
+                # Captures the key word
                 matchText = match.group('keywords')
-
+                # If the captured word is in the negative list, enters the condition
                 if matchText in negative:
-                    reference="negative"
+                    # Reference is set as negative
+                    reference ="negative"
+                    # Reply is a call to the eliza_reply function, where the captured word and the reference are sent as parameters.
                     reply = eliza_reply(matchText,reference)
+                    # The reply is displayed
                     print("Eliza: ", reply)
+                # If the captured word is in the positive list, enters the condition
                 elif matchText in positive:
+                    # Reference is set as positive
                     reference = "positive"
+                    # Reply is a call to the eliza_reply function, where the captured word and the reference are sent as parameters.
                     reply = eliza_reply(matchText,reference)
+                    # The reply is displayed
                     print("Eliza: ", reply)
+                # If neither positive nor negative enters the else condition
                 else:
+                    # Reference is set as decompose( for loop iterator)
                     reference = decompose
+                    # Reply is a call to the eliza_reply function, where the captured word and the reference are sent as parameters.
                     reply = eliza_reply(matchText, reference)
+                    # The reply is displayed
                     print("Eliza: ", reply)
 
+            # If named group does not exist
             except IndexError:
+                # Picks a random reply from the regex dictionary, relating to the passed reference value
                 reply = random.choice(dic[decompose])
+                # The reply is displayed
                 print("Eliza: ", reply)
+            # Returns flag value
             return flag
 
+    # If match not found flag is set to 0
     flag = 0
+    # Returns flag values
     return flag
 
+# Main bot function
 def bot(firstName):
+    # A dummy variable for the while loop
     x = 1
+    # Filler list, consists of replies that need to be used in case a user input is not understood
     filler = ["Tell me more about it " + firstName, "I see", "Please go on " + firstName,
               "That's very interesting " + firstName + "!"]
+    # Empty memory list, to append replies relating to memoryMatchRegEx dictionary
     memorydic=[]
+
+    # A tracker is defined to keep a check on repeated user inputs
     inputTracker = None
 
+    # An infinite while loop
     while x != 0:
+        # userinput stores the users reply
         userinput = input(firstName.title() + ":")
+        # A flag is set to 0
         flag = 0
+        # If user input is empty space enters the condition
         if (userinput == ''):
             print("Eliza: Please say something")
+            # Moves back to start of the loop
             continue
+        # If user input is quit enters the condition and breaks out of the loop
         if (userinput.lower() == "quit"):
             print("Eliza: I will not say goodbye to you! See you soon!")
             break
+        # Checks if user input is same as the inputTracker, if yes enters the loop
         if (userinput == inputTracker):
+            # List of responses if the user in repeating his input
             repeatResponse = ["Are you testing me by repeating yourself?", "Please don't repeat yourself.",
                               "What do you expect me to say by repeating yourself?"]
+            # Picks a random choice from the above list
             print("Eliza:", random.choice(repeatResponse))
+            # Moves back to start of the loop
             continue
 
+        # Memory function is called, with userinput as a parameter. Checks if the userinput matches with regex expression of memoryMatchRegEx
         text=memory(userinput)
 
+        # If the returned text is not same as the userinput, then text is appended to the memorydic list
         if(text!=userinput):
             memorydic.append(text)
 
-
+        # Each iteration stores the userinput in inputTracker
         inputTracker = userinput
 
+        # Matchdic function returns flag value. If regex exists in the dictionary, flag is set to 1 else flag by default is 0
         flag = matchdic(userinput)
 
+        # If flag is 0 and memordic list is empty, a random reply is generated from the filler
         if (flag == 0 and len(memorydic)==0):
             reply = np.random.choice(filler,replace=False)
             print("Eliza: ", reply)
+
+        # If memorydic is not empty and flag is 0, then filler list and memorydic is combined as a single list.
+        # A probability of 0.6 is set for memorydic list and 0.4 for filler list, from which reply is picked and displayed.
         elif (len(memorydic)>0 and flag == 0):
             combinedList=[memorydic,filler]
             listChoice = np.random.choice(len(combinedList),replace=False,p=[0.6,0.4])
             reply=np.random.choice(combinedList[listChoice],replace=False)
             print("Eliza: ", reply)
 
+# Main function
 if (__name__ == "__main__"):
     print("Eliza: Hi, I'm a psychotherapist. What is your name?")
+    # Initial call to the name validation function
     userNameValidation()
