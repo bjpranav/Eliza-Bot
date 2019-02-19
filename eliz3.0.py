@@ -68,10 +68,8 @@ negative = ["sad", "unhappy", "depressed", "sick","dejected","sorrow","regretful
 #Positive words to be detected
 positive = ["happy", "elated", "glad", "better","good","great"]
 
-'''
-Regular expressions for some user inputs whose responses gets stored in memory
-and used when required.
-'''
+
+# Regular expressions for some user inputs whose responses gets stored in memory and used when required
 memoryMatchRegEx = {
 
     r'.* ?(my|our) (?P<keywords>\w+)': ["Lets discuss further about your replacement_text",
