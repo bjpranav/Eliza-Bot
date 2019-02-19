@@ -99,7 +99,7 @@ dic = {
     r'I want (?P<keywords>.+)': ["Do you crave replacement_text?",
                                  "Do you really want replacement_text?",
                                  "How would you feel if you got replacement_text",
-                                 "How badly do you want replacement_text"],
+                                 "How badly do you want replacement_text?"],
        
     #Any reply that has the word 'Sorry' indicates an act of apology. That apology could be to 
     #eliza or about an incdient for which the user feels sorry for etc. Sentences like 
@@ -114,67 +114,96 @@ dic = {
     #'I remember' is captured. Sentences transformations like "How often do you think of replacement_text?
     #and "What makes you remember replacement_text?" makes the user believe Eliza is aware of the context
     #that the user is "Thinking" of something.
-    
 
     r'.*I Remember (?P<keywords>.+)': ["How often do you think of replacement_text?",
                                          "Does thinking of replacement_text bring anything else to mind",
                                          "What makes you remember replacement_text?",
                                          "Why do you want to remember replacement_text now?",
                                          ],
-    #The key word do you remember is similar to the one discussed above. Any thing after the do you 
-    #remember is captured. Sentences transformations like "How often do you think of replacement_text?
-    #and "What makes you remember replacement_text?" makes the user believe Eliza is aware of the context
-    #that the user is "Thinking" of something.
+    #The key word do you remember is similar to the one discussed above. Any thing after the 'do you 
+    #remember' is captured. General answers to these questions would be what else do you remember. To
+    #induce an emotional bonding with the user replies like "Did you think I would forget 
+    #something?" are used.  
 
     r'Do you remember (?P<keywords>.+)': ["Did you think I would forget replacement_text",
                                               "Why do you think I should recall replacement_text now?",
                                               "What else do you remember?"],
+    
 
-    r'(?P<keywords>.+ If .+)': ['Do you think its likely that replacement_text',
-                                "Do you wish that replacement_text",
-                                "What do you think about replacement_text",],
+    #A person coming to a psychotherapist may often talk about the things he envisioned, fantasized or
+    #dreamt about. Therfore the keyword dream is captured. Relating that dream with the problem would keep
+    #the conversation resticted to user himself. This makes the conversation revolve around the context
+    #at which the program is good at. Along with that some general responses 
 
     r'.* dream (?P<keywords>.+)': ["Do you like to fantasize replacement_text everytime?",
-                                    "Does dreaming about that make you crazy?",
-                                    "Do you think the dream has anything to do with your problem?",
+                                    "Do you think \"replacement_text\" has anything to do with your problem?",
                                     "Do you always dream about that?"],
-
+    
+    #'I am', 'am I' are frequent replies a user may give, atleast in context of psychotherapy. So
+    #those words are captured. The program can use the fact that the user is talking about himself
+    #and reply acordingly. For instance, the keyword 'am I' means the user is asking something about
+    #himself. By capturing everything the user says after am I, the sentences can be rephrased into
+    #one which asks more question about the user based on the captured text.
+    
    
     r'.* ?am I (?P<keywords>.+)': ["Do you believe you are replacement_text",
                                   "Would you want to be replacement_text",
-                                  "You wish i would tell replacement_text",
+                                  "You wish I would tell replacement_text",
                                   "What would it mean if you were replacement_text?"],
+    #I am is similar to the prvious one. We know that the user is talking about himself and we can
+    #reply acordingly.
    
     r'I am (?P<keywords>.+)':   ["Is it because you are replacement_text you came to me?",
                                   "How long have you been replacement_text?",
                                   "Do you believe it is normal to be replacement_text?"],
+    #If the user use 'am' and the context is unknown, some general responses are given.
 
     r'.* am (?P<keywords>.+)': ["Why do you say 'am'?",
                                  "I don't understand that",
+                                 "Can you be more clear"
                                  ],
+    #Greetings are common in conversation and it would be appropriate to reply back with greetings.
 
-    r'.* ?Hello ?(?P<keywords>.*)?': ["Hey! How's life?",
+    r'.* ?(Hello|Hi|Hey) ?(?P<keywords>.*)?': ["Hey! How's life?",
                                       "Hi! Nice to meet you. Please state your problem.",
                                       "Hello! Let's discuss about your problems."],
-
+   
+    #If a user is responding with keyword 'are you', we can derive two facts from it. One is that,
+    #user is talking about Eliza and user is asking a question. By leveraging these two facts,we
+    #can transform these sentences by using text after you and asking questions acordingly.
+    
     r'.* ?are you (?P<keywords>.*)': ["Why are you interested in whether I am replacement_text or not ?",
                                       "Would you prefer if I weren't replacement_text ?",
                                       "Perhaps I am replacement_text in your fantasies",
                                       "Do you sometimes think I am replacement_text"],
-
-    r'.* ?are they (?P<keywords>.*)': ["Did you think they might be replacement_text",
-                                       "Would you like if they were not replacement_text ?",
-                                       "What if they were not replacement_text ?",
+    
+    #Similar to are you, are they is a question. Replies like 'What if they are something' and 
+    #'Possibly they are something' would be highly contextual since it is picking up on where 
+    #user left.
+    
+    r'.* ?are they (?P<keywords>.*)': ["Did you think they might be replacement_text?",
+                                       "Would you like if they were not replacement_text?",
+                                       "What if they were not replacement_text?",
                                        "Possibly they are replacement_text"],
-
-    r' .* your (?P<keywords>.*)': ["Why are you concerned over my replacement_text ?",
-                                    "What about your own replacement_text ?",
-                                    "Are you worried about someone else's replacement_text ?",
-                                    "Really, my replacement_text!"],
-
+    
+    #'your' could be a common keyword if an user thinks eliza is a human. So text after the 
+    #keyword 'your' are captured. Replies like "Why are you concerned over my something?",
+    #and "What about your own something?" keeps the conversation personal at which Eliza is
+    #good at responding. Sentence transformations like Are you worried about 
+    #someone else's replacement_text?" encourages binary responses which Eliza can capture
+    #and reply effectively.
+    r' .* your (?P<keywords>.*)': ["Why are you concerned over my replacement_text?",
+                                    "What about your own replacement_text?",
+                                    "Are you worried about someone else's replacement_text?"],
+    
+    #'I was' is similar to the keyword 'I am'. The user is telling something about himself.
+    #"Were you really replacement_text ?" encourages binary output. Moreover, it is general 
+    #question which suits to any context. Questins like "Why do you tell 
+    #me you were replacement_text now?" are general and suits well to the psychatristic context.
     r'I was (?P<keywords>.*)': ["Were you really replacement_text ?",
                                 "Why do you tell me you were replacement_text now?"],
-
+    
+    #'Were you' is similar to the keywords 'are you'.
     r'Were you (?P<keywords>.*)': ["Would you like to believe I was replacement_text ?",
                                      "What suggests that I was replacement_text ?",
                                      "Perhaps I was replacement_text",
@@ -184,11 +213,8 @@ dic = {
                               "That's quite Interesting"
                               ],
 
-    r'.* am (?P<keywords>.+)':["Why do you say 'am'?",
-                              "I don't understand that",
-                              "You wish I would tell you you are replacement_text"
-                              ],
-
+    #Since many questions encourage binary responses it is imporant to capture them. Responses
+    #are general since there may not be keywords after 'yes' or 'no' to capture.
      r'Yes ?(?P<keywords>.*)':["How often do you reply positively?",
                               "You are sure?",
                               "I see","I Understand"
@@ -197,46 +223,61 @@ dic = {
                               "you seem bit negative",
                               "why not?","why 'NO'?"
                               ],
-
+    #Presence of the keyword 'Because' indicates there is some kind of 'reason' involved. So the
+    #keyword 'reason' is used to manipulate responses.
     r'Because (?P<keywords>.+)':["Is that the reason?",
                               "Don't any other reasons come to mind?",
-                              "Does that reason seem to explain anything else?",
-                              "What other reasons might there be?"
+                              "Can you think of any other reasons?",
+                              "Does that reason convience you?"
                               ],
-
+    #Again, why don't you is similar to 'are you'. Here, Probably, user is askinng eliza to do or say.
+    #So responses are general and similar to the response for any question to eliza. 
     r'Why don\'t you (?P<keywords>.+)':["Do you believe I don't replacement_text ",
                               "Perhaps I will replacement_text in good time",
                               "Should you replacement_text yourself",
                               "You want me to replacement_text"
                               ],
-
+    
+    #In this regular expression, keywords related to family are captured. So those key words
+    #are used to frame questions about relationship which the user is talking about
     r'.* ?my (?P<keywords>(mother|father|brother|sister|wife)) .*': ["What was your relationship with your replacement_text like?",
                                                                     "How do you feel about your replacement_text ?",
                                                                     "Does your relationship with your replacement_text related to your feelings today?",
                                                                     "Do you have trouble showing affection with your family?"],
-
+    
+    #In this regular expression, keywords related to family are captured. So those key words
+    #are used to frame questions about relationship which the user is talking about
     r'.* ?(you remind me of|you are) (?P<keywords>\w+)': ["What makes you think I am replacement_text?",
                                   "Does it please you to believe I am replacement_text",
                                   "Do you sometimes wish you were replacement_text",
                                   "Perhaps you would like to be replacement_text"],
-         
+    
+    #'you keyword me' is a special case. Word which comes between you and me are captured. The 
+    #word captured is then used to rephrase it as a question. Some general questions like 
+    #"Why do you think I replacement_text you?" used the word to paraphrase that word as question.
     r'.* ?(you (?P<keywords>\w+) me)': ["Why do you think I replacement_text you?",
                                   "Do you really belive I replacement_text you?",
                                   "I don't think I replacement_text you"],
-          
-    r'.* ?(what ?(?P<keywords>.*))': ["That's an interesting question",
+    #The below regular expression, captures any question word and gives general outputs.
+    r'.* ?(what|why|when|how ?(?P<keywords>.*))': ["That's an interesting question",
                                   "How long is this question in your mind?",
                                   "why did you ask that?",
                                   "Why are you asking that question?"], 
-          
+    #The below regular expression, captures words which refers to people with generality. We can 
+    #ask the user to be more specific.
     r'.* ?(everyone|everybody|none|nobody) ?(?P<keywords>.*)': ["Can you be more specific?",
                                   "Do you have someone in mind?",
                                   "Are you talking about anyone in particular?"],
-          
+    #Similar to previous expression, any replies which have 'always' can be captured and general
+    #replies which asks user to be specific can be given.
     r'.* ?(Always ?(?P<keywords>.*))': ["Do you have anything in particular?",
                                   "Is there any exemptions?",
                                   "Do you like to use definitive language?"],
 
+    #The key word like denotes similarity. But it can also denote desire. To solve disambiguity
+    #we can include auxilary verbs after which the keyword 'like' in the context of similarity usually
+    #follows
+    
     r'.* ?(am|is|are|was) like ?(?P<keywords>.*)': ["How sure are you about the similarity?",
                                   "Do you like to compare things??",
                                   "How did you make the connection?"],
