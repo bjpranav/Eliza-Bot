@@ -8,9 +8,15 @@ if the given sentence is not recognizable. It detects repeated inputs, empty
 strings and replies accordingly. It has a memory feature which makes the
 conversation divert to the previously discussed topic if it does not 
 recognize user input. For example, it stores the reply of sentences where the keyword
-my is used. I detects positive or negative emotions and replies accordingly.
-These features are inspired from the Eliza research paper by Joseph Weizanbaum.
+'my' is used. It detects positive or negative emotions and replies accordingly.
+These features are inspired from the Eliza research paper by Joseph Weizanbaum. To
+the best of our knowledge, almost all the features of the research paper has been 
+implemented in this program.
 
+Reference: weizanbaum, J. (n.d.). ELIZA A Computer Program.
+
+
+    
 PLEASE TYPE 'quit' TO END THE PROGRAM
 
 Algorithm:
