@@ -1,3 +1,5 @@
+Eliza Chat Bot!
+
 Eliza mimics a psychiatrist. It takes input from the user and replies by
 spotting words and transforming sentences. The program replies something even 
 if the given sentence is not recognizable. It detects repeated inputs, empty
